@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Your Project</title>
+    
+    <link rel="stylesheet" href="../css/style.css"> 
+</head>
+<body>
+
+    <header>
+        <h1>Authentication Portal</h1>
+        <p>Register a new account to access the system.</p>
+    </header>
+
+    <main id="login">
+        <form action="#" onsubmit="" method="POST">
+            <h2>Sign Up</h2>
+
+            <div>
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            </div>
+
+            <div >
+                <label for="email">Ashesi Email:</label>
+                <input type="email" id="email" name="email" placeholder="name@ashesi.edu.gh" required >
+            </div>
+
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required >
+            </div>
+
+            <div>
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required >
+            </div>
+            
+            <div class="form">
+                <label for="role">I am a:</label>
+                <select id="role" name="role" required>
+                    <option value="" disabled selected>Select Role</option> 
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="intern">Faculty Intern</option>
+                </select>
+            </div>
+
+            <button type="submit" onclick="save()">Register Account</button>
+
+        </form>
+
+        <p class="switch-view">
+            Already have an account? 
+            <a href="index.html">Log In</a>.
+        </p>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Your Project. All rights reserved.</p>
+    </footer>
+    <script src="../javascript/validation.js"></script>
+</body>
+</html>
