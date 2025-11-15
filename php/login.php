@@ -1,4 +1,4 @@
-<?php include '../html/index.html'; ?>
+<?php include '../html/login.html'; ?>
 
 <?php
 session_start();
