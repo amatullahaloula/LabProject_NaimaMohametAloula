@@ -1,68 +1,88 @@
 <?php
-// Variables $varriable name; or $variablename=value;
-$fname=$_POST['firstname'];
-$lname=$_POST['lastname'];
-$email=$_POST['email'];
-$password=password_hash($_POST['password'],PASSWORD_DEFAULT);
+// signup.php
+require_once "./database.php";
+require_once "../html/register.html";
 
-// storing values from the html page $_POST['field id'];
-// hasing password for dsafety pasword_hassh(password,hash_algorithm[PASSWORD_DEFAULT, PASSWORD_BCRYPT, etc]);
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    http_response_code(405);
+    exit("Method Not Allowed");
+}
 
-// connecting to the database
-$$host = "127.0.0.1";
-$user = "naima.aloula";
-$pass = "mohamet25";
-$db   = "attendancemanagement";
+// Get and trim inputs
+$fullName = isset($_POST['fullName']) ? trim($_POST['fullName']) : '';
+$email = isset($_POST['email']) ? trim($_POST['email']) : '';
+$password = isset($_POST['password']) ? $_POST['password'] : '';
+$confirmPassword = isset($_POST['confirmPassword']) ? $_POST['confirmPassword'] : '';
+$role = isset($_POST['role']) ? trim($_POST['role']) : '';
 
-$con=new mysqli($host,$user,$pass,$db);
-//needed valraiables (hostname,host_user,hostpassword,databasename)
-if($con->connect_error){
-    // error logic
-    die("Connection falied");
-}else{
-    
-//connection new mysqli(all the above variables)
+if ($fullName === '' || $email === '' || $role === '') {
+    exit("All required fields must be filled.");
+}
 
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    exit("Invalid email address.");
+}
 
-// check connection use c->connect_error
-    // ending the program if that is the case
-    //OR
-    //die("connection failed: ".$c->connect_error);
+// Default supervisor ID for interns
+$defaultSupervisorID = 1;
 
+// ------------------------
+// Role-based insertion
+// ------------------------
 
-// Making SQL COMMANDS [getting th users table(SELECT * FROM users) / adding to the user table(INSERT INTO users (first_name, last_name, email, password_hash) VALUES ('$fname', '$lname', '$email', '$hashedpassword'))]
-$stmt = $con->prepare("INSERT INTO users (first_name, last_name, email, password_hash) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("ssss", $fname, $lname, $email, $password);
+if ($role === 'student') {
 
-if ($stmt->execute()) {
-    header('Location: ../view/login.html');
-    exit();
+    if ($password === '' || $confirmPassword === '') {
+        exit("Password is required for students.");
+    }
+    if ($password !== $confirmPassword) {
+        exit("Passwords do not match.");
+    }
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO student (full_name, email, password_hash) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) { exit("Prepare failed: " . $conn->error); }
+    $stmt->bind_param("sss", $fullName, $email, $password_hash);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('".$fullName." registered successfully as student.');</script>";
+        header("Location: ../html/index.html");
+    } else {
+        echo "Registration failed: " . htmlspecialchars($stmt->error);
+    }
+
+} elseif ($role === 'faculty') {
+
+    $sql = "INSERT INTO faculty (full_name, email) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) { exit("Prepare failed: " . $conn->error); }
+    $stmt->bind_param("ss", $fullName, $email);
+
+    if ($stmt->execute()) {
+        echo "Faculty account created successfully.";
+    } else {
+        echo "Registration failed: " . htmlspecialchars($stmt->error);
+    }
+
+} elseif ($role === 'intern') {
+
+    $sql = "INSERT INTO faculty_intern (full_name, email, supervisor_id) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) { exit("Prepare failed: " . $conn->error); }
+    $stmt->bind_param("ssi", $fullName, $email, $defaultSupervisorID);
+
+    if ($stmt->execute()) {
+        echo "Faculty intern (TA) created successfully. Supervisor assigned by default.";
+    } else {
+        echo "Registration failed: " . htmlspecialchars($stmt->error);
+    }
+
 } else {
-    echo "Failed: " . $stmt->error;
+    exit("Invalid role selected.");
 }
 
-//preventing SQL INJECTION: using c->prepare(command)
-//getting the result -Query call $c->query($command);
-// if you use select to see if there are results use $result->num_rows to see number of rows returned
-
-
-// Redirect if insert is successful query retruns true or false 
-if($c===TRUE){
-    header('Location: ../view/login.html');
-    exit();
-}else{
-    echo "Failed Retry";
-}
-
-// if html is rendered in php to check for a submit 
-// $_SERVER['REQUEST_METHOD'] === 'POST'
-
-// When using js and expecting a return value you echo a json instead of redirecting
-//$state=["state"=>true];
-
-//echo using json_encode(object to echo);
-
-// ending the program
+$stmt->close();
+$conn->close();
 ?>
-
-<!-- require -->
