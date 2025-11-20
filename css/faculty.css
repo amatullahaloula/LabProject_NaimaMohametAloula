@@ -1,0 +1,121 @@
+/* === GENERAL PAGE SETUP === */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 95%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 25px 35px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* === HEADINGS === */
+h1, h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* === FORM STYLING === */
+form {
+    margin-bottom: 40px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    transition: 0.2s border-color;
+}
+
+input:focus,
+select:focus {
+    border-color: #4a90e2;
+}
+
+/* === BUTTON === */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #b95d5d;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 17px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s ease;
+}
+
+.btn-submit:hover {
+    background: #b44545;
+}
+
+/* === TABLE SECTION === */
+.course-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+}
+
+.course-table thead {
+    background: #b44545;
+    color: white;
+}
+
+.course-table th,
+.course-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* Action buttons */
+.action-btn {
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-edit {
+    background: #ffc107;
+}
+
+.btn-delete {
+    background: #dc3545;
+}
+
+.btn-edit:hover {
+    background: #d9a406;
+}
+
+.btn-delete:hover {
+    background: #bb2d3b;
+}

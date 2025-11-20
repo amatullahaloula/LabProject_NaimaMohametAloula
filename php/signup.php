@@ -26,55 +26,67 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // Default supervisor ID for interns
 $defaultSupervisorID = 1;
 
-// ------------------------
-// Role-based insertion
-// ------------------------
+// ----------------------------------------------------
+// PASSWORD VALIDATION FOR ALL ROLES
+// ----------------------------------------------------
+if ($password === '' || $confirmPassword === '') {
+    exit("Password and confirmation are required.");
+}
+
+if ($password !== $confirmPassword) {
+    exit("Passwords do not match.");
+}
+
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+// ----------------------------------------------------
+// ROLE-BASED INSERTION
+// ----------------------------------------------------
 
 if ($role === 'student') {
-
-    if ($password === '' || $confirmPassword === '') {
-        exit("Password is required for students.");
-    }
-    if ($password !== $confirmPassword) {
-        exit("Passwords do not match.");
-    }
-
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     $sql = "INSERT INTO student (full_name, email, password_hash) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if (!$stmt) { exit("Prepare failed: " . $conn->error); }
+
     $stmt->bind_param("sss", $fullName, $email, $password_hash);
 
     if ($stmt->execute()) {
         echo "<script>alert('".$fullName." registered successfully as student.');</script>";
-        header("Location: ../html/index.html");
+        header("Location: ../php/login.php");
+        exit();
     } else {
         echo "Registration failed: " . htmlspecialchars($stmt->error);
     }
 
 } elseif ($role === 'faculty') {
 
-    $sql = "INSERT INTO faculty (full_name, email) VALUES (?, ?)";
+    $sql = "INSERT INTO faculty (full_name, email, password_hash, hire_date)
+            VALUES (?, ?, ?, CURRENT_DATE)";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) { exit("Prepare failed: " . $conn->error); }
-    $stmt->bind_param("ss", $fullName, $email);
+
+    $stmt->bind_param("sss", $fullName, $email, $password_hash);
 
     if ($stmt->execute()) {
-        echo "Faculty account created successfully.";
+        echo "Faculty registered successfully.";
     } else {
         echo "Registration failed: " . htmlspecialchars($stmt->error);
     }
 
 } elseif ($role === 'intern') {
 
-    $sql = "INSERT INTO faculty_intern (full_name, email, supervisor_id) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO faculty_intern (full_name, email, password_hash, supervisor_id, start_date)
+            VALUES (?, ?, ?, ?, CURRENT_DATE)";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) { exit("Prepare failed: " . $conn->error); }
-    $stmt->bind_param("ssi", $fullName, $email, $defaultSupervisorID);
+
+    $stmt->bind_param("sssi", $fullName, $email, $password_hash, $defaultSupervisorID);
 
     if ($stmt->execute()) {
-        echo "Faculty intern (TA) created successfully. Supervisor assigned by default.";
+        echo "Faculty intern registered successfully. Supervisor assigned automatically.";
     } else {
         echo "Registration failed: " . htmlspecialchars($stmt->error);
     }
