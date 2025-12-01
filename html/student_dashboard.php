@@ -1,3 +1,20 @@
+<?php
+// student_dashboard.php
+
+// 1. Démarrer la session pour accéder aux données
+session_start();
+
+// 2. VÉRIFICATION D'AUTORISATION (Empêche l'accès si l'utilisateur n'est PAS un 'student')
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
+    // Rediriger vers la page de connexion (index.html ou login.html)
+    header("Location: student_dashboard.php"); 
+    exit(); 
+}
+
+// L'utilisateur est autorisé. Le code HTML commence ici.
+// Récupérer le nom complet à partir de la session pour l'affichage
+$full_name = htmlspecialchars($_SESSION['full_name']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,18 +28,19 @@
 
 <body>
 
-    <header class="dashboard-header">
+    <header class="faculty_dashboard">
         <h1>Student Dashboard</h1>
-        <a href="index.html" class="logout-btn">Log Out</a>
+        <p>Bienvenue, <?php echo $full_name; ?>!</p> 
+        <a href="logout.php" class="logout-btn">Log Out</a>
     </header>
 
     <div class="dashboard-layout">
         <nav class="dashboard-nav">
             <ul>
                 <li><a href="../php/student_course.php">My Courses</a></li>
-                <li><a href="#">Grades & Progress</a></li>
-                <li><a href="#">Class Schedule</a></li>
-                <li><a href="#">Academic Resources</a></li>
+                <li><a href="#grades-and-progress">Grades & Progress</a></li>
+                <li><a href="#schedule">Class Schedule</a></li>
+                <li><a href="#resources">Academic Resources</a></li>
             </ul>
         </nav>
 
@@ -34,9 +52,7 @@
                     <p>A list of courses you are currently enrolled in for the semester.</p>
 
                     <div class="content-placeholder">
-                        <p>A table showing course names, faculty assigned, and quick access links to course materials
-                            will
-                            be displayed here.</p>
+                        <p>A table showing course names, faculty assigned, and quick access links to course materials will be displayed here.</p>
                         <table>
                             <thead>
                                 <tr>
@@ -71,9 +87,7 @@
                     <p>View your performance, current grades, and cumulative GPA.</p>
 
                     <div class="content-placeholder">
-                        <p>Detailed grade breakdown for all assignments, quizzes, and exams will be accessible,
-                            including
-                            final course grades.</p>
+                        <p>Detailed grade breakdown for all assignments, quizzes, and exams will be accessible, including final course grades.</p>
                     </div>
                 </section>
             </div>
@@ -107,12 +121,9 @@
         </main>
     </div>
 
-
-
     <footer>
         <p>&copy; 2025 Your Project. Student Access.</p>
     </footer>
 
 </body>
-
 </html>

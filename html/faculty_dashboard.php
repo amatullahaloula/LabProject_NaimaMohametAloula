@@ -1,3 +1,20 @@
+<?php
+// faculty_dashboard.php
+
+// 1. Démarrer la session
+session_start();
+
+// 2. VÉRIFICATION D'AUTORISATION (Empêche l'accès si l'utilisateur n'est PAS un 'faculty')
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'faculty') {
+    // Rediriger vers la page de connexion
+    header("Location: ../html/index.html"); 
+    exit(); 
+}
+
+// L'utilisateur est autorisé. 
+// Récupérer le nom complet à partir de la session pour l'affichage
+$full_name = htmlspecialchars($_SESSION['full_name']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,17 +27,18 @@
 
 <body>
 
-    <header class="dashboard-header">
+    <header class="Faculty-dashboard">
         <h1>Faculty Dashboard</h1>
-        <a href="index.html" class="logout-btn">Log Out</a>
+        <p>Bienvenue, Professeur <?php echo $full_name; ?>!</p>
+        <a href="logout.php" class="logout-btn">Log Out</a>
     </header>
 
     <div class="dashboard-layout">
         <nav class="dashboard-nav">
             <ul>
-                <li><a href="../php/faculty_courses.php">My Courses</a></li>
-                <li><a href="../php/faculty_course_management.php">Course Management</a></li>
-                <li><a href="../php/faculty_course_approvals.php">Course Approvals</a></li>
+                <li><a href="faculty_courses.php">My Courses</a></li>
+                <li><a href="faculty_course_management.php">Course Management</a></li>
+                <li><a href="#">Performance Reports</a></li>
                 <li><a href="#">Administrative Tasks</a></li>
             </ul>
         </nav>
@@ -45,7 +63,6 @@
                 <section id="reports">
                     <h2>Session Overview</h2>
                     <p>View student feedback, department reviews, and performance metrics.</p>
-
                 </section>
 
                 <hr>
@@ -53,15 +70,12 @@
                 <section id="administrative-tasks">
                     <h2>Attendance Report</h2>
                     <p>Forms and tools for student partification and approval of notice of absence.</p>
-
                 </section>
             </div>
 
 
         </main>
     </div>
-
-
 
     <footer>
         <p>&copy; 2025 Lab Project. Faculty Access.</p>

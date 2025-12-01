@@ -1,3 +1,13 @@
+<?php
+session_start();
+// Initialise les variables pour les messages d'état
+$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+$success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
+
+// Nettoyer les variables de session après les avoir récupérées pour ne pas les réafficher
+unset($_SESSION['error']);
+unset($_SESSION['success']);
+?>
 <!DOCTYPE html> 
 <html lang="en">
 <head>
@@ -15,15 +25,31 @@
     </header>
 
     <main id="login">
-        <form action="../php/signup.php" method="POST">
+        <form action="signup.php" method="POST"> 
             <h2>Sign Up</h2>
 
+            <?php if ($error): ?>
+                <div style="color: red; font-weight: bold; margin-bottom: 15px; border: 1px solid red; padding: 10px;">
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($success): ?>
+                <div style="color: green; font-weight: bold; margin-bottom: 15px; border: 1px solid green; padding: 10px;">
+                    <?php echo htmlspecialchars($success); ?>
+                </div>
+                <script>
+                    setTimeout(function() {
+                        window.location.href = "login.php"; // Rediriger vers la page de connexion PHP
+                    }, 3000); // 3 secondes
+                </script>
+            <?php endif; ?>
             <div>
                 <label for="fullName">Full Name:</label>
                 <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
             </div>
 
-            <div >
+            <div>
                 <label for="email">Ashesi Email:</label>
                 <input type="email" id="email" name="email" placeholder="name@ashesi.edu.gh" required >
             </div>
@@ -48,22 +74,19 @@
                 </select>
             </div>
 
-            <button type="submit" onclick="save()">Register Account</button>
-
+            <button type="submit">Register Account</button> 
+            
         </form>
 
         <p class="switch-view">
             Already have an account? 
-            <a href="../php/login.php">Log In</a>.
+            <a href="login.php">Log In</a>. 
         </p>
     </main>
 
     <footer>
         <p>&copy; 2025 Your Project. All rights reserved.</p>
     </footer>
-    <!-- <script src="../javascript/validation.js"></script> -->
+
 </body>
 </html>
-
-
-
